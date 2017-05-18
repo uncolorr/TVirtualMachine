@@ -1,15 +1,5 @@
 mov 3 ax
-mov 3 bx
+mov ax bx
 mul ax bx
-
-mov 'a' ax
-get_char ax
-put_char ax
-
-// str = "hello"
-// size = 5
-mov str ax
-mov size bx
-put_str str size
-
-vk.com/d1021976
+inc ax
+out ax

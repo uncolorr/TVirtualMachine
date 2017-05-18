@@ -16,6 +16,10 @@ Processor::Processor(const QMap<QString, QString>& syntax)
     bx = 0;
     cx = 0;
     dx = 0;
+    eax = 0;
+    ebx = 0;
+    ecx = 0;
+    edx = 0;
     pc = 0; // указатель на номер команды
     sp = 0; // указатель на номер параметра
     syntax_ = syntax;
@@ -35,20 +39,25 @@ void Processor::initRegs()
     regs["000000000000000000000000011"] = &dx;
 }
 
-void Processor::start(QVector<Tryte>& memory, int cmdLength)
+void Processor::initFloatRegs()
+{
+    floatRegs["000000000000000000000000012"] = &eax;
+    floatRegs["000000000000000000000000020"] = &ebx;
+    floatRegs["000000000000000000000000021"] = &ecx;
+    floatRegs["000000000000000000000000022"] = &edx;
+}
+
+void Processor::start(QVector<Tryte>& memory,QVector<Tryte>& ROM, int cmdLength)
 {
     bool isF = false;
     while(true)
     {
-        qDebug() << "iter";
+        //qDebug() << "iter";
         if(memory[pc] == syntax_["mov:num:reg"])
         {
             *(regs[memory[PARAM_MEM_BEGIN + sp + 1].getData()]) = TInt(memory[PARAM_MEM_BEGIN + sp]);
             pc++;
             sp += 2;
-            qDebug() << "dddddd";
-            ax.print();
-
         }
         else if(memory[pc] == syntax_["mov:reg:reg"])
         {
@@ -100,19 +109,19 @@ void Processor::start(QVector<Tryte>& memory, int cmdLength)
 
         else if(memory[pc] == syntax_["inc:reg"])
         {
-            *(regs[memory[PARAM_MEM_BEGIN + sp].getData()])++;
+            *(regs[memory[PARAM_MEM_BEGIN + sp].getData()]) += TInt(1);
             pc++;
             sp++;
         }
 
         else if(memory[pc] == syntax_["dec:reg"])
         {
-            *(regs[memory[PARAM_MEM_BEGIN + sp].getData()])--;
+            *(regs[memory[PARAM_MEM_BEGIN + sp].getData()]) -= TInt(1);
             pc++;
             sp++;
         }
 
-        else if(memory[pc] == syntax_["not:reg"])
+        else if(memory[pc] == syntax_["not:reg"])//
         {
 
         }
@@ -131,7 +140,125 @@ void Processor::start(QVector<Tryte>& memory, int cmdLength)
             sp += 2;
         }
 
+        else if(memory[pc] == syntax_["mov:sym:adr"])
+        {
+            ROM[memory[PARAM_MEM_BEGIN + sp + 1].toNum()] = memory[PARAM_MEM_BEGIN + sp];
+            pc++;
+            sp += 2;
+        }
 
+        else if(memory[pc] == syntax_["mov:num:adr"])
+        {
+            ROM[memory[PARAM_MEM_BEGIN + sp + 1].toNum()] = memory[PARAM_MEM_BEGIN + sp];
+            pc++;
+            sp += 2;
+        }
+
+        else if(memory[pc] == syntax_["mov:adr:reg"])//
+        {
+
+        }
+
+        else if(memory[pc] == syntax_["mov:reg:adr"])
+        {
+            ROM[memory[PARAM_MEM_BEGIN + sp + 1].toNum()] = (regs[memory[PARAM_MEM_BEGIN + sp].getData()])->toString();
+            pc++;
+            sp += 2;
+
+        }//------------------------------------------
+
+        else if(memory[pc] == syntax_["sub:frg:frg"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) -= *(floatRegs[memory[PARAM_MEM_BEGIN + sp + 1].getData()]);
+            pc++;
+            sp += 2;
+
+        }
+
+        else if(memory[pc] == syntax_["sub:frg:fnm"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) -= TFloat(TInt(memory[PARAM_MEM_BEGIN + sp + 1]),TInt(memory[PARAM_MEM_BEGIN + sp + 2]));
+            pc++;
+            sp += 3;
+        }
+
+        else if(memory[pc] == syntax_["mul:frg:fnm"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) *= TFloat(TInt(memory[PARAM_MEM_BEGIN + sp + 1]),TInt(memory[PARAM_MEM_BEGIN + sp + 2]));
+            pc++;
+            sp += 3;
+        }
+
+        else if(memory[pc] == syntax_["mul:frg:frg"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) *= *(floatRegs[memory[PARAM_MEM_BEGIN + sp + 1].getData()]);
+            pc++;
+            sp += 2;
+        }
+
+        else if(memory[pc] == syntax_["div:frg:fnm"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) /= TFloat(TInt(memory[PARAM_MEM_BEGIN + sp + 1]),TInt(memory[PARAM_MEM_BEGIN + sp + 2]));
+            pc++;
+            sp += 3;
+        }
+
+        else if(memory[pc] == syntax_["div:frg:frg"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) /= *(floatRegs[memory[PARAM_MEM_BEGIN + sp + 1].getData()]);
+            pc++;
+            sp += 2;
+        }
+
+        else if(memory[pc] == syntax_["add:frg:fnm"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) += TFloat(TInt(memory[PARAM_MEM_BEGIN + sp + 1]),TInt(memory[PARAM_MEM_BEGIN + sp + 2]));
+            pc++;
+            sp += 3;
+        }
+
+        else if(memory[pc] == syntax_["add:frg:frg"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) += *(floatRegs[memory[PARAM_MEM_BEGIN + sp + 1].getData()]);
+            pc++;
+            sp += 2;
+        }
+
+        else if(memory[pc] == syntax_["inc:frg"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) += TFloat(1.0);
+            pc++;
+            sp++;
+        }
+
+        else if(memory[pc] == syntax_["dec:frg"])
+        {
+            *(floatRegs[memory[PARAM_MEM_BEGIN + sp].getData()]) -= TFloat(1.0);
+            pc++;
+            sp++;
+        }
+
+        else if(memory[pc] == syntax_["out:reg"])
+        {
+            cout << *(regs[memory[PARAM_MEM_BEGIN + sp].getData()]) << endl;
+            pc++;
+            sp++;
+        }
+
+        else if(memory[pc] == syntax_["out:frg"])
+        {
+
+        }
+
+        else if(memory[pc] == syntax_["out:num"])
+        {
+
+        }
+
+        else if(memory[pc] == syntax_["out:fnm"])
+        {
+
+        }
 
         if(pc > cmdLength && !isF)
         {
@@ -144,8 +271,7 @@ void Processor::start(QVector<Tryte>& memory, int cmdLength)
                 {
                 case 'y':
                     cout << "Виртуальная машина завершила работу." << endl;
-                    ax.print();
-                    return;                 
+                    return;
                     break;
                 case 'n':
                     isF = true;

@@ -10,16 +10,13 @@ class TFloat
 private:
     TInt mantissa;
     TInt degree;
-    //TInt mantissa();
-   // TInt degree();
     void setMantissa(TInt other);
-   // void setDegree();
-
-
 public:
     TFloat();
     TFloat(float value);
     TFloat(TInt m, TInt d );
+
+    QString toString();
 
     ~TFloat();
 

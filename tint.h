@@ -6,7 +6,7 @@
 #include <stack>
 #include <QVector>
 #include <QDebug>
-#include "bigint.h"
+
 
 using namespace std;
 const int INT_SIZE = 1;
@@ -17,7 +17,6 @@ class TInt
 private:
     Tryte data;
 private:
-    QVector<int> pow(int rank);
     long long abs(long long);
 public:
     TInt();

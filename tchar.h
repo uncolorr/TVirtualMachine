@@ -1,18 +1,27 @@
 #ifndef TCHAR_H
 #define TCHAR_H
 
-#include "tryte.h"
+#include "tint.h"
 #include <stack>
 using namespace std;
 class TChar
 {
 private:
-    Tryte data;
+    TInt data;
 public:
     TChar();
-    TChar(int value);
+    TChar(unsigned value);
     TChar(char symbol);
+    TChar(const TChar& other);
+    TChar(const Tryte& tryte);
     ~TChar();
+public:
+    TInt getData();
+    void setData(const TInt& other);
+public:
+    TInt &operator= (char symbol);
+    friend ostream& operator << (ostream & os, const TChar& value);
+    friend istream& operator >> (istream & is, TChar& value);
 
 
 };

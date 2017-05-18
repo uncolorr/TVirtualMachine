@@ -14,7 +14,6 @@ SOURCES += main.cpp \
     tint.cpp \
     tryte.cpp \
     trit.cpp \
-    bigint.cpp \
     translator.cpp \
     processor.cpp \
     tchar.cpp \
@@ -35,7 +34,6 @@ HEADERS += \
     tint.h \
     trit.h \
     tryte.h \
-    bigint.h \
     translator.h \
     processor.h \
     tchar.h \

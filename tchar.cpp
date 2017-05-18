@@ -5,8 +5,9 @@ TChar::TChar()
 
 }
 
-TChar::TChar(int value)
+TChar::TChar(unsigned value)
 {
+    Tryte d;
     value %= 256;
     stack <int> remainders;
     if(value < SYS_BASE)
@@ -31,18 +32,67 @@ TChar::TChar(int value)
 
     while(remainders.size())
     {
-        data.setTrit(Trit(remainders.top()), i + r + 1);
+        d.setTrit(Trit(remainders.top()), i + r + 1);
         remainders.pop();
         i++;
     }
+    TInt temp(d);
+    data = temp;
 }
 
 TChar::TChar(char symbol)
 {
+    int chr = (int)symbol;
+    data = chr;
+}
 
+TChar::TChar(const TChar &other)
+{
+    data = other.data;
+}
+
+TChar::TChar(const Tryte &tryte)
+{
+    TInt temp(tryte);
+    data = temp;
 }
 
 TChar::~TChar()
 {
 
+}
+
+TInt TChar::getData()
+{
+    return data;
+}
+
+void TChar::setData(const TInt &other)
+{
+    data = other;
+}
+
+TInt &TChar::operator=(char symbol)
+{
+    TChar chr(symbol);
+    data = chr.data;
+}
+
+ostream& operator <<(ostream &os, const TChar &value)
+{
+    string data = value.data.toString().toStdString();
+    for(int i = 0; i < TRYTE_SIZE; i++)
+    {
+        os << data[i];
+    }
+    return os;
+}
+
+istream& operator >>(istream &is, TChar &value)
+{
+    char symbol;
+    is >> symbol;
+    TChar temp(symbol);
+    value.setData(temp.data);
+    return is;
 }

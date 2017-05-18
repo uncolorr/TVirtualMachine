@@ -27,9 +27,9 @@ TFloat::TFloat(float value)
     }
     for(int i = 0; i < vec.size(); i++)
     {
-        cout << vec.at(i);
+ //       cout << vec.at(i);
     }
-    cout << endl;
+  //  cout << endl;
     Tryte tempTryte;
     tempTryte.setData(intPart.toString());
     Tryte tryte;
@@ -45,7 +45,6 @@ TFloat::TFloat(float value)
         tryte.setTrit(Trit(vec.at(i - 1)), TRYTE_SIZE - SPACE_FOR_FRAC - 1 + i);
     }
 
-
     TInt m(tryte);
     if(intPart.isNegative())
     {
@@ -53,13 +52,19 @@ TFloat::TFloat(float value)
     }
     mantissa = m;
     degree = -SPACE_FOR_FRAC;
-    cout << "number " << mantissa << " | " << degree << endl;
+  //  cout << "number " << mantissa << " | " << degree << endl;
 }
 
 TFloat::TFloat(TInt m, TInt d)
 {
     mantissa = m;
     degree = d;
+}
+
+QString TFloat::toString()
+{
+    QString result;
+    return mantissa.toString();
 }
 
 TFloat::~TFloat()
@@ -266,9 +271,9 @@ const TFloat operator+(const TFloat &left, const TFloat &right)
     TFloat first = left;
     TFloat second = right;
 
-    cout << first.mantissa << " | " << first.degree << endl;
+    //cout << first.mantissa << " | " << first.degree << endl;
 
-    cout << second.mantissa << " | " << second.degree << endl;
+    //cout << second.mantissa << " | " << second.degree << endl;
     if(left.degree > right.degree)
     {
         while(first.degree != second.degree)
@@ -286,14 +291,14 @@ const TFloat operator+(const TFloat &left, const TFloat &right)
         }
     }
 
-    cout << first.mantissa << " | " << first.degree << endl;
-    cout << second.mantissa << " | " << second.degree << endl;
+   // cout << first.mantissa << " | " << first.degree << endl;
+   // cout << second.mantissa << " | " << second.degree << endl;
 
     result.degree = first.degree;
     result.mantissa = first.mantissa + second.mantissa;
-    cout << endl <<"result: " << result.mantissa << " | " << result.degree;
+  //  cout << endl <<"result: " << result.mantissa << " | " << result.degree;
 
-    // while(result.mantissa.)
+
 
     return result;
 
@@ -325,12 +330,12 @@ const TFloat operator-(const TFloat &left, const TFloat &right)
         }
     }
 
-    cout << first.mantissa << " | " << first.degree;
-    cout << second.mantissa << " | " << second.degree;
+  //  cout << first.mantissa << " | " << first.degree;
+  //  cout << second.mantissa << " | " << second.degree;
 
     result.degree = first.degree;
     result.mantissa = first.mantissa - second.mantissa;
-    cout << endl <<"result: " << result.mantissa << " | " << result.degree;
+   // cout << endl <<"result: " << result.mantissa << " | " << result.degree;
 
     return result;
 }
@@ -361,7 +366,7 @@ const TFloat operator*(const TFloat &left, const TFloat &right)
     TInt m(tryte);
     result.mantissa = m;
     result.degree = -SPACE_FOR_FRAC;
-    cout << endl <<"result: " << result.mantissa << " | " << result.degree;
+   // cout << endl <<"result: " << result.mantissa << " | " << result.degree;
 
     return result;
 }

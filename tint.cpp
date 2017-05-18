@@ -1,28 +1,5 @@
 #include "tint.h"
 
-QVector<int> TInt::pow(int rank)
-{
-    if (!rank)
-    {
-        QVector<int> v = {1};
-        for(int i = 0; i < 12; i++)
-        {
-            v.push_front(0);
-        }
-        return v;
-    }
-
-    if (rank == 1)
-    {
-        QVector<int> v = {3};
-        for(int i = 0; i < 12; i++)
-        {
-            v.push_front(0);
-        }
-        return v;
-    }
-}
-
 long long TInt::abs(long long v)
 {
     if (v < 0)
@@ -159,7 +136,6 @@ TInt::TInt(const QString& value)
     while(result.size())
     {
         data.setTrit(Trit(result.top()), i + shift + 1);
-        qDebug() << "result.top()" << result.top();
         result.pop();
         i++;
     }
@@ -208,11 +184,7 @@ void TInt::setIn3ss(QString value)
 
 void TInt::print() const
 {
-    //cout << endl;
-    for(int i = 0; i < TRYTE_SIZE; i++)
-    {
-        qDebug() << "int" << data.trit(i);
-    }
+
 }
 
 QString TInt::toString() const
@@ -380,7 +352,6 @@ TInt &TInt::operator=(QString value)
     while(result.size())
     {
         data.setTrit(Trit(result.top()), i + shift);
-        qDebug() << "result.top()" << result.top();
         result.pop();
         i++;
     }
@@ -555,7 +526,6 @@ TInt& operator*= (TInt &left, const TInt &right)
 
 const TInt operator+ (const TInt &left, const TInt &right)
 {
-    qDebug() << "was in +";
     TInt result;
     if(left.isNegative() && right.isNegative())
     {
@@ -647,10 +617,8 @@ const TInt operator- (const TInt &left, const TInt &right)
 
     if(!left.isNegative() && !right.isNegative())
     {
-        larger(left, right, first, second);
-        qDebug() << "first";
+        larger(left, right, first, second);      
         first.print();
-        qDebug() << "second";
         second.print();
         for(int i = TRYTE_SIZE - 1; i >= 1; i--) //1
         {
@@ -745,8 +713,6 @@ const TInt operator- (const TInt &left, const TInt &right)
 
 const TInt operator/ (const TInt &left, const TInt &right)
 {
-    qDebug() << "l" << left.numberRank();
-    qDebug() << "r" << right.numberRank();
 
     if (left < right)
     {
@@ -764,7 +730,7 @@ const TInt operator/ (const TInt &left, const TInt &right)
     TInt temp(0);
     for(int i = 0; i < left.numberRank() - right.numberRank() + 1; i++)
     {
-        cout << endl << "i " << i << endl;
+      //  cout << endl << "i " << i << endl;
         TInt div = temp;
         if(!i)
         {
@@ -799,17 +765,14 @@ const TInt operator/ (const TInt &left, const TInt &right)
 
         while(div >= right) // >= =
         {
-            qDebug() << "div";
             div.print();
             div = div - right;
-            qDebug() << "div";
             div.print();
             counter++;
         }
         temp = div;
         vecResult.push_back(Trit(counter));
     }
-    qDebug() << "was here";
 
     size_t shift = TRYTE_SIZE - vecResult.size() - 1;
     for(int i = 0; i < vecResult.size(); i++)
@@ -820,7 +783,7 @@ const TInt operator/ (const TInt &left, const TInt &right)
     {
         result = -result;
     }
-    qDebug() << "res" << result.numberRank();
+
     return result;
     //return TInt(0);
 }
@@ -841,25 +804,21 @@ const TInt operator* (const TInt &left, const TInt &right)
     {
         second = -second;
     }
-    // qDebug() << "left";
-    //left.print();
-    //qDebug() << "right";
-    // right.print();
+
     QVector <TInt> terms;
     stack <int> multipliers;
     TInt result;
     int shift = TRYTE_SIZE - second.numberRank();
-    qDebug() << "shift" << shift;
     for(size_t i = 0; i < second.numberRank(); i++)
     {
         multipliers.push((int)second.data.trit(shift + i));
-        cout << endl;
-        cout <<"s "<< multipliers.top();
+       // cout << endl;
+      //  cout <<"s "<< multipliers.top();
     }
 
     while(!multipliers.empty())
     {
-        cout << "stack size " << multipliers.size();
+        //cout << "stack size " << multipliers.size();
         TInt term(0);
         for(int j = 0; j < multipliers.top(); j++)
         {
@@ -868,7 +827,7 @@ const TInt operator* (const TInt &left, const TInt &right)
         terms.push_back(term);
         multipliers.pop();
     }
-    cout << endl << "terms size " << terms.size() << endl;
+   // cout << endl << "terms size " << terms.size() << endl;
 
     for(int i = 0; i < terms.size(); i++)
     {
