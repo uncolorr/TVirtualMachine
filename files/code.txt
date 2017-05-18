@@ -1,5 +1,0 @@
-mov 3 ax
-mov ax bx
-mul ax bx
-inc ax
-out ax
