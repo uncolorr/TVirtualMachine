@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/resources">
-        <file>files/syntax.txt</file>
-        <file>files/code.txt</file>
-    </qresource>
-</RCC>
